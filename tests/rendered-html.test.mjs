@@ -38,6 +38,7 @@ test("server-renders the documentation index", async () => {
   assert.match(html, /内容来源/);
   assert.match(html, />docs\/architecture\.md</);
   assert.match(html, /在 GitHub 编辑 docs\/architecture\.md/);
+  assert.match(html, /class="source-reference"[^>]+href="https:\/\/github\.com\/chogng\/zeta\/edit\/main\/docs\/architecture\.md"[^>]*>[\s\S]*内容来源[\s\S]*docs\/architecture\.md[\s\S]*↗[\s\S]*<\/a>/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton|Your site is taking shape/i);
 });
 

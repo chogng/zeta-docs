@@ -206,13 +206,11 @@ export function DocsShell({ currentDoc, currentIndex, groups, html, nextDoc, pre
         <article className="doc">
           <div className="doc-meta">
             <div className="breadcrumbs"><span>{currentDoc.group}</span><span>/</span><span>第 {currentIndex + 1} 篇</span></div>
-            <div className="source-reference">
+            <a className="source-reference" href={sourceUrl} target="_blank" rel="noreferrer" aria-label={`在 GitHub 编辑 ${currentDoc.sourcePath}`} title="在 GitHub 编辑源文档">
               <span className="source-reference-label">内容来源</span>
               <code className="source-path">{currentDoc.sourcePath}</code>
-              <a className="source-link" href={sourceUrl} target="_blank" rel="noreferrer" aria-label={`在 GitHub 编辑 ${currentDoc.sourcePath}`} title="在 GitHub 编辑源文档">
-                <span aria-hidden="true">↗</span>
-              </a>
-            </div>
+              <span className="source-link-icon" aria-hidden="true">↗</span>
+            </a>
           </div>
           <h1>{displayTitle(currentDoc)}</h1>
           <p className="doc-description">{currentDoc.description}</p>
