@@ -516,7 +516,7 @@ kbd {
   border: 1px solid var(--border);
   border-radius: 10px;
   overflow: hidden;
-  font-size: 13.5px;
+  font-size: 13px;
   line-height: 1.45;
 }
 
@@ -531,7 +531,12 @@ kbd {
 
 .prose th {
   background: var(--surface);
+  color: var(--foreground);
   font-weight: 700;
+}
+
+.prose td {
+  color: var(--muted);
 }
 
 .prose tr:last-child td {
