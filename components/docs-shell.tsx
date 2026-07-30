@@ -24,6 +24,7 @@ export function DocsShell({ currentDoc, currentIndex, groups, html, nextDoc, pre
   const searchInput = useRef<HTMLInputElement>(null);
   const titles = useMemo(() => new Map(searchItems.map((item) => [item.slug, displayTitle(item)])), [searchItems]);
   const activeGroup = groups.find((group) => group.slugs.includes(currentDoc.slug)) ?? { label: "工程文档", slugs: [] };
+  const sourceUrl = `https://github.com/chogng/zeta/edit/main/${currentDoc.sourcePath}`;
 
   useEffect(() => {
     const saved = window.localStorage.getItem("zeta-docs-theme");
@@ -203,7 +204,7 @@ export function DocsShell({ currentDoc, currentIndex, groups, html, nextDoc, pre
 
       <main className="content-layout">
         <article className="doc">
-          <a className="source-link" href={`/source/${currentDoc.slug}`} target="_blank" rel="noreferrer" aria-label="查看 Markdown 源文件" title="查看 Markdown 源文件">
+          <a className="source-link" href={sourceUrl} target="_blank" rel="noreferrer" aria-label="在 GitHub 编辑源文档" title="在 GitHub 编辑源文档">
             <span aria-hidden="true">↗</span>
           </a>
           <div className="breadcrumbs"><span>{currentDoc.group}</span><span>/</span><span>第 {currentIndex + 1} 篇</span></div>
