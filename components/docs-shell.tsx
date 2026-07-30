@@ -203,7 +203,7 @@ export function DocsShell({ currentDoc, currentIndex, groups, html, nextDoc, pre
 
       <main className="content-layout">
         <article className="doc">
-          <a className="source-link" href={`https://github.com/chogng/zeta/blob/main/${currentDoc.sourcePath}`} target="_blank" rel="noreferrer" aria-label="查看源文件" title="查看源文件">
+          <a className="source-link" href={`/source/${currentDoc.slug}`} target="_blank" rel="noreferrer" aria-label="查看 Markdown 源文件" title="查看 Markdown 源文件">
             <span aria-hidden="true">↗</span>
           </a>
           <div className="breadcrumbs"><span>{currentDoc.group}</span><span>/</span><span>第 {currentIndex + 1} 篇</span></div>

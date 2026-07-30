@@ -41,3 +41,13 @@ test("returns not found for an unknown documentation slug", async () => {
   const response = await render("/docs/not-a-real-page");
   assert.equal(response.status, 404);
 });
+
+test("serves the Markdown source used by a documentation page", async () => {
+  const response = await render("/source/permissions");
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("content-type") ?? "", /^text\/markdown\b/i);
+
+  const source = await response.text();
+  assert.match(source, /^# 权限系统$/m);
+  assert.match(source, /^## 快速理解$/m);
+});
