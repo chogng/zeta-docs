@@ -204,10 +204,16 @@ export function DocsShell({ currentDoc, currentIndex, groups, html, nextDoc, pre
 
       <main className="content-layout">
         <article className="doc">
-          <a className="source-link" href={sourceUrl} target="_blank" rel="noreferrer" aria-label="在 GitHub 编辑源文档" title="在 GitHub 编辑源文档">
-            <span aria-hidden="true">↗</span>
-          </a>
-          <div className="breadcrumbs"><span>{currentDoc.group}</span><span>/</span><span>第 {currentIndex + 1} 篇</span></div>
+          <div className="doc-meta">
+            <div className="breadcrumbs"><span>{currentDoc.group}</span><span>/</span><span>第 {currentIndex + 1} 篇</span></div>
+            <div className="source-reference">
+              <span className="source-reference-label">内容来源</span>
+              <code className="source-path">{currentDoc.sourcePath}</code>
+              <a className="source-link" href={sourceUrl} target="_blank" rel="noreferrer" aria-label={`在 GitHub 编辑 ${currentDoc.sourcePath}`} title="在 GitHub 编辑源文档">
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
           <h1>{displayTitle(currentDoc)}</h1>
           <p className="doc-description">{currentDoc.description}</p>
           <div ref={prose} className="prose" dangerouslySetInnerHTML={{ __html: html }} />
