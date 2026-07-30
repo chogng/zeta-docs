@@ -131,12 +131,12 @@ export function DocsShell({ currentDoc, currentIndex, groups, html, nextDoc, pre
 
       <main className="content-layout">
         <article className="doc">
+          <a className="source-link" href={`https://github.com/chogng/zeta/blob/main/${currentDoc.sourcePath}`} target="_blank" rel="noreferrer" aria-label="查看源文件" title="查看源文件">
+            <span aria-hidden="true">↗</span>
+          </a>
           <div className="breadcrumbs"><span>{currentDoc.group}</span><span>/</span><span>第 {currentIndex + 1} 篇</span></div>
           <h1>{displayTitle(currentDoc)}</h1>
           <p className="doc-description">{currentDoc.description}</p>
-          <a className="source-link" href={`https://github.com/chogng/zeta/blob/main/${currentDoc.sourcePath}`} target="_blank" rel="noreferrer">
-            查看源文件 <span>{currentDoc.sourcePath}</span> ↗
-          </a>
           <div className="prose" dangerouslySetInnerHTML={{ __html: html }} />
           <nav className="page-navigation" aria-label="上一篇和下一篇">
             {previousDoc ? <Link href={`/docs/${previousDoc.slug}`}><small>上一篇</small><span>← {displayTitle(previousDoc)}</span></Link> : <span />}
