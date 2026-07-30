@@ -367,8 +367,8 @@ kbd {
   max-width: 700px;
   margin: 14px 0 26px;
   color: var(--muted);
-  font-size: 18px;
-  line-height: 1.55;
+  font-size: 16px;
+  line-height: 1.58;
 }
 
 .source-link {
@@ -400,8 +400,8 @@ kbd {
 
 .prose {
   color: var(--foreground);
-  font-size: 16px;
-  line-height: 1.66;
+  font-size: 15px;
+  line-height: 1.62;
 }
 
 .prose h2,
@@ -893,10 +893,6 @@ kbd {
 
   .doc > h1 {
     font-size: 30px;
-  }
-
-  .doc-description {
-    font-size: 16px;
   }
 
   .page-navigation {
