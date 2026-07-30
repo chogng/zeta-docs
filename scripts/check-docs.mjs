@@ -1,5 +1,5 @@
 import { readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
-import { basename, join, relative, resolve } from "node:path";
+import { join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const siteRoot = resolve(fileURLToPath(new URL("..", import.meta.url)));

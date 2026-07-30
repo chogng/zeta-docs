@@ -504,6 +504,29 @@ kbd {
   line-height: 1.55;
 }
 
+.flow-diagram {
+  width: 100%;
+  margin: 18px 0 22px;
+  overflow-x: auto;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.flow-diagram svg {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.flow-diagram-error {
+  color: var(--muted);
+  text-align: center;
+}
+
 .prose blockquote {
   margin: 18px 0;
   padding: 12px 16px;

@@ -20,6 +20,7 @@ export function DocsShell({ currentDoc, currentIndex, groups, html, nextDoc, pre
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const prose = useRef<HTMLDivElement>(null);
   const searchInput = useRef<HTMLInputElement>(null);
   const titles = useMemo(() => new Map(searchItems.map((item) => [item.slug, displayTitle(item)])), [searchItems]);
   const activeGroup = groups.find((group) => group.slugs.includes(currentDoc.slug)) ?? { label: "工程文档", slugs: [] };
@@ -27,8 +28,9 @@ export function DocsShell({ currentDoc, currentIndex, groups, html, nextDoc, pre
   useEffect(() => {
     const saved = window.localStorage.getItem("zeta-docs-theme");
     const initialTheme = saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
-    setTheme(initialTheme);
     document.documentElement.dataset.theme = initialTheme;
+    const frame = window.requestAnimationFrame(() => setTheme(initialTheme));
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   useEffect(() => {
@@ -49,6 +51,76 @@ export function DocsShell({ currentDoc, currentIndex, groups, html, nextDoc, pre
   useEffect(() => {
     if (searchOpen) window.setTimeout(() => searchInput.current?.focus(), 20);
   }, [searchOpen]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const renderDiagrams = async () => {
+      const root = prose.current;
+      if (!root) return;
+
+      root.querySelectorAll<HTMLElement>("pre > code.language-mermaid").forEach((code) => {
+        const container = document.createElement("div");
+        container.className = "flow-diagram";
+        container.dataset.mermaidSource = code.textContent ?? "";
+        container.setAttribute("role", "img");
+        container.setAttribute("aria-label", "文档流程图");
+        code.parentElement?.replaceWith(container);
+      });
+
+      const diagrams = Array.from(root.querySelectorAll<HTMLElement>(".flow-diagram[data-mermaid-source]"));
+      if (!diagrams.length) return;
+
+      const { default: mermaid } = await import("mermaid");
+      if (cancelled) return;
+
+      const styles = window.getComputedStyle(document.documentElement);
+      const token = (name: string) => styles.getPropertyValue(name).trim();
+      mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: "strict",
+        theme: "base",
+        themeVariables: {
+          background: token("--background"),
+          primaryColor: token("--accent-soft"),
+          primaryTextColor: token("--foreground"),
+          primaryBorderColor: token("--accent"),
+          secondaryColor: token("--surface"),
+          secondaryTextColor: token("--foreground"),
+          secondaryBorderColor: token("--border-strong"),
+          tertiaryColor: token("--surface-strong"),
+          tertiaryTextColor: token("--foreground"),
+          tertiaryBorderColor: token("--border-strong"),
+          lineColor: token("--muted"),
+          edgeLabelBackground: token("--background"),
+          clusterBkg: token("--surface"),
+          clusterBorder: token("--border-strong"),
+          fontFamily: 'Inter, ui-sans-serif, "PingFang SC", "Microsoft YaHei", sans-serif',
+          fontSize: "14px",
+        },
+      });
+
+      for (const [index, container] of diagrams.entries()) {
+        const source = container.dataset.mermaidSource;
+        if (!source) continue;
+        try {
+          const diagramId = `diagram-${currentDoc.slug.replace(/[^a-z0-9-]/gi, "-")}-${theme}-${index}`;
+          const { svg, bindFunctions } = await mermaid.render(diagramId, source);
+          if (cancelled) return;
+          container.innerHTML = svg;
+          bindFunctions?.(container);
+        } catch {
+          container.classList.add("flow-diagram-error");
+          container.textContent = "流程图暂时无法渲染。";
+        }
+      }
+    };
+
+    void renderDiagrams();
+    return () => {
+      cancelled = true;
+    };
+  }, [currentDoc.slug, html, theme]);
 
   const results = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -137,7 +209,7 @@ export function DocsShell({ currentDoc, currentIndex, groups, html, nextDoc, pre
           <div className="breadcrumbs"><span>{currentDoc.group}</span><span>/</span><span>第 {currentIndex + 1} 篇</span></div>
           <h1>{displayTitle(currentDoc)}</h1>
           <p className="doc-description">{currentDoc.description}</p>
-          <div className="prose" dangerouslySetInnerHTML={{ __html: html }} />
+          <div ref={prose} className="prose" dangerouslySetInnerHTML={{ __html: html }} />
           <nav className="page-navigation" aria-label="上一篇和下一篇">
             {previousDoc ? <Link href={`/docs/${previousDoc.slug}`}><small>上一篇</small><span>← {displayTitle(previousDoc)}</span></Link> : <span />}
             {nextDoc ? <Link className="next" href={`/docs/${nextDoc.slug}`}><small>下一篇</small><span>{displayTitle(nextDoc)} →</span></Link> : <span />}
