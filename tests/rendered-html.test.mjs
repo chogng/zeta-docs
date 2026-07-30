@@ -28,8 +28,9 @@ test("server-renders the documentation index", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /<title>架构文档索引 · Zeta 文档<\/title>/i);
-  assert.match(html, />架构文档索引</);
+  assert.match(html, /<title>系统地图 · Zeta 文档<\/title>/i);
+  assert.match(html, />系统地图</);
+  assert.match(html, /language-mermaid/);
   assert.match(html, /搜索文档/);
   assert.match(html, /本页内容/);
   assert.match(html, /由仓库中的 Markdown 自动生成/);
