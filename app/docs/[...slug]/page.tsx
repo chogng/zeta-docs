@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { docGroups, docs } from "@/app/generated-docs";
 import { DocsShell } from "@/components/docs-shell";
+import { displayTitle } from "@/lib/display-title";
 import { renderMarkdown } from "@/lib/markdown";
 
 type PageProps = {
@@ -15,7 +16,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const doc = docs.find((candidate) => candidate.slug === slug.join("/"));
-  return doc ? { title: doc.title, description: doc.description } : {};
+  return doc ? { title: displayTitle(doc), description: doc.description } : {};
 }
 
 export default async function DocPage({ params }: PageProps) {

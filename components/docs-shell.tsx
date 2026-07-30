@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { displayTitle } from "@/lib/display-title";
 import type { DocGroup, SearchItem, ZetaDoc } from "@/lib/types";
 
 type DocsShellProps = {
@@ -20,7 +21,7 @@ export function DocsShell({ currentDoc, currentIndex, groups, html, nextDoc, pre
   const [query, setQuery] = useState("");
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const searchInput = useRef<HTMLInputElement>(null);
-  const titles = useMemo(() => new Map(searchItems.map((item) => [item.slug, item.title])), [searchItems]);
+  const titles = useMemo(() => new Map(searchItems.map((item) => [item.slug, displayTitle(item)])), [searchItems]);
   const activeGroup = groups.find((group) => group.slugs.includes(currentDoc.slug)) ?? { label: "工程文档", slugs: [] };
 
   useEffect(() => {
@@ -74,7 +75,10 @@ export function DocsShell({ currentDoc, currentIndex, groups, html, nextDoc, pre
 
   const sidebar = (
     <nav className="sidebar-nav" aria-label="文档导航">
-      <div className="sidebar-section-heading"><span>{activeGroup.label}</span><span>{activeGroup.slugs.length}</span></div>
+      <div className="sidebar-context">
+        <span className="sidebar-eyebrow">当前分类</span>
+        <div className="sidebar-section-heading"><span>{activeGroup.label}</span><span>{activeGroup.slugs.length}</span></div>
+      </div>
       <div className="nav-items">
         {activeGroup.slugs.map((slug) => (
           <Link className={slug === currentDoc.slug ? "nav-link active" : "nav-link"} href={`/docs/${slug}`} key={slug} onClick={() => setMenuOpen(false)}>
@@ -128,15 +132,15 @@ export function DocsShell({ currentDoc, currentIndex, groups, html, nextDoc, pre
       <main className="content-layout">
         <article className="doc">
           <div className="breadcrumbs"><span>{currentDoc.group}</span><span>/</span><span>第 {currentIndex + 1} 篇</span></div>
-          <h1>{currentDoc.title}</h1>
+          <h1>{displayTitle(currentDoc)}</h1>
           <p className="doc-description">{currentDoc.description}</p>
           <a className="source-link" href={`https://github.com/chogng/zeta/blob/main/${currentDoc.sourcePath}`} target="_blank" rel="noreferrer">
             查看源文件 <span>{currentDoc.sourcePath}</span> ↗
           </a>
           <div className="prose" dangerouslySetInnerHTML={{ __html: html }} />
           <nav className="page-navigation" aria-label="上一篇和下一篇">
-            {previousDoc ? <Link href={`/docs/${previousDoc.slug}`}><small>上一篇</small><span>← {previousDoc.title}</span></Link> : <span />}
-            {nextDoc ? <Link className="next" href={`/docs/${nextDoc.slug}`}><small>下一篇</small><span>{nextDoc.title} →</span></Link> : <span />}
+            {previousDoc ? <Link href={`/docs/${previousDoc.slug}`}><small>上一篇</small><span>← {displayTitle(previousDoc)}</span></Link> : <span />}
+            {nextDoc ? <Link className="next" href={`/docs/${nextDoc.slug}`}><small>下一篇</small><span>{displayTitle(nextDoc)} →</span></Link> : <span />}
           </nav>
           <footer className="doc-footer">Zeta 文档由仓库中的 Markdown 自动生成。</footer>
         </article>
@@ -161,7 +165,7 @@ export function DocsShell({ currentDoc, currentIndex, groups, html, nextDoc, pre
               {results.length ? results.map((item) => (
                 <Link href={`/docs/${item.slug}`} key={item.slug} onClick={() => setSearchOpen(false)}>
                   <span className="result-group">{item.group}</span>
-                  <strong>{item.title}</strong>
+                  <strong>{displayTitle(item)}</strong>
                   <p>{item.description}</p>
                 </Link>
               )) : <div className="empty-results">没有找到相关文档。试试更短的关键词。</div>}

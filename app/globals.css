@@ -6,36 +6,36 @@
   --header-height: 116px;
   --sidebar-width: 286px;
   --toc-width: 232px;
-  --background: #ffffff;
-  --surface: #f7f8f7;
-  --surface-strong: #eef1ef;
-  --foreground: #17201c;
-  --muted: #627069;
-  --faint: #8b9791;
-  --border: #e3e8e5;
-  --border-strong: #d4dcd7;
-  --accent: #18794e;
-  --accent-strong: #0f6841;
-  --accent-soft: #e9f7ef;
-  --code-background: #171d1a;
-  --code-foreground: #e9f2ed;
-  --shadow: 0 18px 60px rgba(23, 32, 28, 0.14);
+  --background: #faf9f4;
+  --surface: #f2f0e9;
+  --surface-strong: #e8e6df;
+  --foreground: #262521;
+  --muted: #66625b;
+  --faint: #918b82;
+  --border: #e4e1d8;
+  --border-strong: #d5d1c7;
+  --accent: #d97757;
+  --accent-strong: #a84f35;
+  --accent-soft: #f4e7e0;
+  --code-background: #26231f;
+  --code-foreground: #f3efe7;
+  --shadow: 0 18px 60px rgba(55, 48, 39, 0.14);
 }
 
 :root[data-theme="dark"] {
-  --background: #111513;
-  --surface: #171c19;
-  --surface-strong: #202722;
-  --foreground: #edf3ef;
-  --muted: #a1ada6;
-  --faint: #758078;
-  --border: #28312c;
-  --border-strong: #38443d;
-  --accent: #59c48c;
-  --accent-strong: #73d6a1;
-  --accent-soft: #193526;
-  --code-background: #090c0a;
-  --code-foreground: #e5eee9;
+  --background: #1c1a17;
+  --surface: #24211d;
+  --surface-strong: #302c27;
+  --foreground: #f1ede5;
+  --muted: #b5aea4;
+  --faint: #817a71;
+  --border: #332f2a;
+  --border-strong: #474038;
+  --accent: #e18a68;
+  --accent-strong: #f0a382;
+  --accent-soft: #3a2922;
+  --code-background: #11100e;
+  --code-foreground: #f1ece3;
   --shadow: 0 18px 70px rgba(0, 0, 0, 0.38);
 }
 
@@ -127,8 +127,8 @@ a {
 }
 
 .global-nav-link.active {
-  border-bottom-color: var(--accent);
-  color: var(--accent-strong);
+  border-bottom-color: var(--foreground);
+  color: var(--foreground);
 }
 
 .brand {
@@ -146,8 +146,8 @@ a {
   height: 27px;
   place-items: center;
   border-radius: 8px;
-  background: var(--foreground);
-  color: var(--background);
+  background: var(--accent);
+  color: #fffaf5;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 14px;
   font-weight: 800;
@@ -236,17 +236,32 @@ kbd {
 }
 
 .sidebar-nav {
-  padding: 28px 24px 48px;
+  padding: 26px 20px 48px;
+}
+
+.sidebar-context {
+  margin: 0 4px 18px;
+  padding: 0 8px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-eyebrow {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--faint);
+  font-size: 10px;
+  font-weight: 720;
+  letter-spacing: 0.08em;
 }
 
 .sidebar-section-heading {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 0 10px 16px;
+  margin: 0;
   color: var(--foreground);
-  font-size: 13px;
-  font-weight: 740;
+  font-size: 14px;
+  font-weight: 750;
 }
 
 .sidebar-section-heading span:last-child {
@@ -284,16 +299,18 @@ kbd {
 
 .nav-items {
   display: grid;
-  gap: 2px;
+  gap: 4px;
 }
 
 .nav-link {
+  position: relative;
   display: block;
-  padding: 7px 10px;
-  border-radius: 7px;
+  padding: 9px 12px;
+  border: 1px solid transparent;
+  border-radius: 10px;
   color: var(--muted);
-  font-size: 13px;
-  line-height: 1.38;
+  font-size: 13.5px;
+  line-height: 1.42;
 }
 
 .nav-link:hover {
@@ -302,9 +319,21 @@ kbd {
 }
 
 .nav-link.active {
-  background: var(--accent-soft);
-  color: var(--accent-strong);
-  font-weight: 650;
+  border-color: color-mix(in srgb, var(--border-strong) 70%, transparent);
+  background: var(--surface-strong);
+  color: var(--foreground);
+  font-weight: 700;
+}
+
+.nav-link.active::before {
+  position: absolute;
+  top: 9px;
+  bottom: 9px;
+  left: 0;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--accent);
+  content: "";
 }
 
 .content-layout {
@@ -340,9 +369,10 @@ kbd {
   margin: 0;
   color: var(--foreground);
   font-size: clamp(34px, 4vw, 48px);
-  font-weight: 760;
-  letter-spacing: -0.045em;
-  line-height: 1.13;
+  font-family: ui-serif, "Songti SC", "STSong", Georgia, serif;
+  font-weight: 620;
+  letter-spacing: -0.035em;
+  line-height: 1.18;
 }
 
 .doc-description {
@@ -368,7 +398,7 @@ kbd {
 
 .prose {
   color: var(--foreground);
-  font-size: 15.5px;
+  font-size: 16px;
   line-height: 1.8;
 }
 

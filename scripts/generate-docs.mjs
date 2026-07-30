@@ -9,7 +9,7 @@ const outputPath = join(siteRoot, "app", "generated-docs.ts");
 
 const groups = [
   {
-    label: "开始了解 Zeta",
+    label: "开始了解",
     files: [
       "architecture",
       "product-editions",
