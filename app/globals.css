@@ -356,7 +356,7 @@ kbd {
   max-width: 760px;
   margin: 0;
   color: var(--foreground);
-  font-size: clamp(34px, 4vw, 48px);
+  font-size: clamp(30px, 3.2vw, 42px);
   font-family: ui-serif, "Songti SC", "STSong", Georgia, serif;
   font-weight: 620;
   letter-spacing: -0.035em;
@@ -415,7 +415,7 @@ kbd {
 .prose h2 {
   margin: 42px 0 13px;
   padding-top: 3px;
-  font-size: 27px;
+  font-size: 24px;
   font-weight: 730;
   line-height: 1.24;
 }
@@ -884,7 +884,7 @@ kbd {
   }
 
   .doc > h1 {
-    font-size: 34px;
+    font-size: 30px;
   }
 
   .doc-description {
