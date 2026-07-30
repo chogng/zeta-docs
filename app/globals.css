@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
 :root {
+  --shell-width: 1540px;
+  --shell-gutter: max(0px, calc((100vw - var(--shell-width)) / 2));
+  --sidebar-width: 286px;
+  --toc-width: 220px;
   --background: #ffffff;
   --surface: #f7f8f7;
   --surface-strong: #eef1ef;
@@ -78,7 +82,7 @@ a {
   align-items: center;
   gap: 22px;
   width: 100%;
-  max-width: 1540px;
+  max-width: var(--shell-width);
   height: 100%;
   margin: 0 auto;
   padding: 0 30px;
@@ -181,8 +185,8 @@ kbd {
   z-index: 20;
   top: 64px;
   bottom: 0;
-  left: max(0px, calc((100vw - 1540px) / 2));
-  width: 286px;
+  left: var(--shell-gutter);
+  width: var(--sidebar-width);
   overflow-y: auto;
   border-right: 1px solid var(--border);
   background: var(--background);
@@ -255,15 +259,17 @@ kbd {
 
 .content-layout {
   display: grid;
-  grid-template-columns: minmax(0, 770px) 220px;
-  gap: 70px;
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 120px 40px 80px 326px;
+  grid-template-columns: minmax(0, 1fr) var(--toc-width);
+  gap: clamp(44px, 4.5vw, 70px);
+  width: min(calc(100vw - var(--shell-gutter) - var(--sidebar-width)), calc(var(--shell-width) - var(--sidebar-width)));
+  margin-left: calc(var(--shell-gutter) + var(--sidebar-width));
+  padding: 120px 48px 80px;
 }
 
 .doc {
+  width: min(100%, 760px);
   min-width: 0;
+  justify-self: center;
 }
 
 .breadcrumbs {
@@ -465,6 +471,7 @@ kbd {
 .toc {
   position: sticky;
   top: 102px;
+  width: var(--toc-width);
   align-self: start;
   max-height: calc(100vh - 130px);
   overflow-y: auto;
@@ -650,6 +657,11 @@ kbd {
 }
 
 @media (max-width: 1180px) {
+  :root {
+    --shell-gutter: 0px;
+    --sidebar-width: 256px;
+  }
+
   .topbar-inner {
     padding: 0 20px;
   }
@@ -662,14 +674,12 @@ kbd {
     min-width: 160px;
   }
 
-  .sidebar {
-    width: 256px;
-  }
-
   .content-layout {
     grid-template-columns: minmax(0, 740px);
-    max-width: 1000px;
-    padding-left: 300px;
+    justify-content: center;
+    width: calc(100vw - var(--sidebar-width));
+    margin-left: var(--sidebar-width);
+    padding: 112px 44px 72px;
   }
 
   .toc {
@@ -714,6 +724,8 @@ kbd {
 
   .content-layout {
     display: block;
+    width: auto;
+    margin-left: 0;
     padding: 104px 24px 64px;
   }
 
