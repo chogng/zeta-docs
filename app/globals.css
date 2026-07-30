@@ -3,6 +3,7 @@
 :root {
   --shell-width: 1540px;
   --shell-gutter: max(0px, calc((100vw - var(--shell-width)) / 2));
+  --header-height: 116px;
   --sidebar-width: 286px;
   --toc-width: 232px;
   --background: #ffffff;
@@ -44,7 +45,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 90px;
+  scroll-padding-top: calc(var(--header-height) + 26px);
 }
 
 body {
@@ -71,21 +72,63 @@ a {
   top: 0;
   right: 0;
   left: 0;
-  height: 64px;
+  height: var(--header-height);
   border-bottom: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
   background: color-mix(in srgb, var(--background) 92%, transparent);
   backdrop-filter: blur(16px);
 }
 
-.topbar-inner {
+.topbar-main {
   display: flex;
   align-items: center;
   gap: 22px;
   width: 100%;
   max-width: var(--shell-width);
+  height: 64px;
+  margin: 0 auto;
+  padding: 0 30px;
+}
+
+.topbar-navigation {
+  height: calc(var(--header-height) - 64px);
+  border-top: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+}
+
+.global-nav {
+  display: flex;
+  gap: 4px;
+  width: 100%;
+  max-width: var(--shell-width);
   height: 100%;
   margin: 0 auto;
   padding: 0 30px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.global-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.global-nav-link {
+  display: flex;
+  height: 100%;
+  flex: 0 0 auto;
+  align-items: center;
+  padding: 0 14px;
+  border-bottom: 2px solid transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.global-nav-link:hover {
+  color: var(--foreground);
+}
+
+.global-nav-link.active {
+  border-bottom-color: var(--accent);
+  color: var(--accent-strong);
 }
 
 .brand {
@@ -183,7 +226,7 @@ kbd {
 .sidebar {
   position: fixed;
   z-index: 20;
-  top: 64px;
+  top: var(--header-height);
   bottom: 0;
   left: var(--shell-gutter);
   width: var(--sidebar-width);
@@ -193,16 +236,23 @@ kbd {
 }
 
 .sidebar-nav {
-  padding: 30px 24px 48px;
+  padding: 28px 24px 48px;
 }
 
-.sidebar-eyebrow {
-  margin: 0 10px 22px;
+.sidebar-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 10px 16px;
+  color: var(--foreground);
+  font-size: 13px;
+  font-weight: 740;
+}
+
+.sidebar-section-heading span:last-child {
   color: var(--faint);
   font-size: 11px;
-  font-weight: 750;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-weight: 600;
 }
 
 .nav-group {
@@ -263,7 +313,7 @@ kbd {
   gap: clamp(44px, 4.5vw, 70px);
   width: min(calc(100vw - var(--shell-gutter) - var(--sidebar-width)), calc(var(--shell-width) - var(--sidebar-width)));
   margin-left: calc(var(--shell-gutter) + var(--sidebar-width));
-  padding: 120px 48px 80px;
+  padding: calc(var(--header-height) + 42px) 48px 80px;
 }
 
 .doc {
@@ -470,7 +520,7 @@ kbd {
 
 .toc {
   position: sticky;
-  top: 102px;
+  top: calc(var(--header-height) + 30px);
   width: var(--toc-width);
   align-self: start;
   max-height: calc(100vh - 130px);
@@ -662,7 +712,11 @@ kbd {
     --sidebar-width: 256px;
   }
 
-  .topbar-inner {
+  .topbar-main {
+    padding: 0 20px;
+  }
+
+  .global-nav {
     padding: 0 20px;
   }
 
@@ -679,7 +733,7 @@ kbd {
     justify-content: center;
     width: calc(100vw - var(--sidebar-width));
     margin-left: var(--sidebar-width);
-    padding: 112px 44px 72px;
+    padding: calc(var(--header-height) + 36px) 44px 72px;
   }
 
   .toc {
@@ -699,8 +753,18 @@ kbd {
     display: grid;
   }
 
-  .topbar-inner {
+  .topbar-main {
     gap: 12px;
+  }
+
+  .global-nav {
+    gap: 0;
+    padding: 0 12px;
+  }
+
+  .global-nav-link {
+    padding: 0 11px;
+    font-size: 12px;
   }
 
   .brand {
@@ -726,7 +790,7 @@ kbd {
     display: block;
     width: auto;
     margin-left: 0;
-    padding: 104px 24px 64px;
+    padding: calc(var(--header-height) + 32px) 24px 64px;
   }
 
   .mobile-drawer-backdrop {
@@ -762,7 +826,7 @@ kbd {
 }
 
 @media (max-width: 520px) {
-  .topbar-inner {
+  .topbar-main {
     padding: 0 12px;
   }
 
@@ -779,8 +843,7 @@ kbd {
   }
 
   .content-layout {
-    padding-right: 18px;
-    padding-left: 18px;
+    padding: calc(var(--header-height) + 28px) 18px 56px;
   }
 
   .doc > h1 {

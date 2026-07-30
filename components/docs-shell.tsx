@@ -21,6 +21,7 @@ export function DocsShell({ currentDoc, currentIndex, groups, html, nextDoc, pre
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const searchInput = useRef<HTMLInputElement>(null);
   const titles = useMemo(() => new Map(searchItems.map((item) => [item.slug, item.title])), [searchItems]);
+  const activeGroup = groups.find((group) => group.slugs.includes(currentDoc.slug)) ?? { label: "工程文档", slugs: [] };
 
   useEffect(() => {
     const saved = window.localStorage.getItem("zeta-docs-theme");
@@ -73,29 +74,21 @@ export function DocsShell({ currentDoc, currentIndex, groups, html, nextDoc, pre
 
   const sidebar = (
     <nav className="sidebar-nav" aria-label="文档导航">
-      <div className="sidebar-eyebrow">工程文档</div>
-      {groups.map((group) => {
-        const containsCurrent = group.slugs.includes(currentDoc.slug);
-        return (
-          <details className="nav-group" key={group.label} open={containsCurrent || group.label !== "Crate 实现参考"}>
-            <summary>{group.label}<span>{group.slugs.length}</span></summary>
-            <div className="nav-items">
-              {group.slugs.map((slug) => (
-                <Link className={slug === currentDoc.slug ? "nav-link active" : "nav-link"} href={`/docs/${slug}`} key={slug} onClick={() => setMenuOpen(false)}>
-                  {titles.get(slug)}
-                </Link>
-              ))}
-            </div>
-          </details>
-        );
-      })}
+      <div className="sidebar-section-heading"><span>{activeGroup.label}</span><span>{activeGroup.slugs.length}</span></div>
+      <div className="nav-items">
+        {activeGroup.slugs.map((slug) => (
+          <Link className={slug === currentDoc.slug ? "nav-link active" : "nav-link"} href={`/docs/${slug}`} key={slug} onClick={() => setMenuOpen(false)}>
+            {titles.get(slug)}
+          </Link>
+        ))}
+      </div>
     </nav>
   );
 
   return (
     <div className="site-shell">
       <header className="topbar">
-        <div className="topbar-inner">
+        <div className="topbar-main">
           <button className="icon-button mobile-only" type="button" aria-label="打开导航" onClick={() => setMenuOpen(true)}>☰</button>
           <Link className="brand" href="/docs/architecture" aria-label="Zeta 文档首页">
             <span className="brand-mark">Z</span>
@@ -111,13 +104,22 @@ export function DocsShell({ currentDoc, currentIndex, groups, html, nextDoc, pre
             <button className="icon-button" type="button" aria-label="切换明暗主题" onClick={toggleTheme}>{theme === "light" ? "◐" : "☀"}</button>
           </div>
         </div>
+        <div className="topbar-navigation">
+          <nav className="global-nav" aria-label="一级文档导航">
+            {groups.map((group) => (
+              <Link className={group === activeGroup ? "global-nav-link active" : "global-nav-link"} href={`/docs/${group.slugs[0]}`} key={group.label}>
+                {group.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
       </header>
 
       <aside className="sidebar desktop-sidebar">{sidebar}</aside>
       {menuOpen && (
         <div className="mobile-drawer-backdrop" role="presentation" onClick={() => setMenuOpen(false)}>
           <aside className="mobile-drawer" onClick={(event) => event.stopPropagation()}>
-            <div className="drawer-header"><strong>目录</strong><button className="icon-button" type="button" aria-label="关闭导航" onClick={() => setMenuOpen(false)}>×</button></div>
+            <div className="drawer-header"><strong>{activeGroup.label}</strong><button className="icon-button" type="button" aria-label="关闭导航" onClick={() => setMenuOpen(false)}>×</button></div>
             {sidebar}
           </aside>
         </div>
