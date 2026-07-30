@@ -4,7 +4,7 @@
   --shell-width: 1540px;
   --shell-gutter: max(0px, calc((100vw - var(--shell-width)) / 2));
   --sidebar-width: 286px;
-  --toc-width: 220px;
+  --toc-width: 232px;
   --background: #ffffff;
   --surface: #f7f8f7;
   --surface-strong: #eef1ef;
@@ -480,18 +480,18 @@ kbd {
 }
 
 .toc-title {
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   color: var(--foreground);
-  font-size: 12px;
-  font-weight: 720;
+  font-size: 14px;
+  font-weight: 740;
 }
 
 .toc-link {
   display: block;
-  padding: 5px 0;
-  color: var(--faint);
-  font-size: 12px;
-  line-height: 1.4;
+  padding: 6px 0;
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.5;
 }
 
 .toc-link:hover {
@@ -499,12 +499,12 @@ kbd {
 }
 
 .toc-link.nested {
-  padding-left: 12px;
+  padding-left: 14px;
 }
 
 .toc-empty {
-  color: var(--faint);
-  font-size: 12px;
+  color: var(--muted);
+  font-size: 13.5px;
 }
 
 .page-navigation {
