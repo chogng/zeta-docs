@@ -303,7 +303,6 @@ kbd {
 }
 
 .nav-link {
-  position: relative;
   display: block;
   padding: 9px 12px;
   border: 1px solid transparent;
@@ -323,17 +322,6 @@ kbd {
   background: var(--surface-strong);
   color: var(--foreground);
   font-weight: 700;
-}
-
-.nav-link.active::before {
-  position: absolute;
-  top: 9px;
-  bottom: 9px;
-  left: 0;
-  width: 3px;
-  border-radius: 0 3px 3px 0;
-  background: var(--accent);
-  content: "";
 }
 
 .content-layout {
@@ -498,8 +486,7 @@ kbd {
   margin: 18px 0;
   padding: 12px 16px;
   border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border));
-  border-left: 4px solid var(--accent);
-  border-radius: 4px 10px 10px 4px;
+  border-radius: 10px;
   background: var(--accent-soft);
   color: var(--muted);
 }
