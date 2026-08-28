@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Serve Zeta Docs",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run serve",
+      "cwd": "${workspaceFolder}",
+      "serverReadyAction": {
+        "action": "openIntegratedBrowser",
+        "pattern": "Listening at (https?://localhost:\\d+)",
+        "uriFormat": "%s"
+      }
+    }
+  ]
+}

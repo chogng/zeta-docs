@@ -152,7 +152,7 @@
         homepage: "docs/getstarted/overview.md",
         loadSidebar: true,
         loadNavbar: true,
-        relativePath: false,
+        relativePath: true,
         subMaxLevel: 2,
         auto2top: true,
         search: {
@@ -162,14 +162,17 @@
           paths: "auto",
         },
         alias: {
+          "/docs.*/_sidebar.md": "/_sidebar.md",
           "/.*/_sidebar.md": "/_sidebar.md",
           "/.*/_navbar.md": "/_navbar.md",
         },
         plugins: [
-          function normalizeMarkdown(hook) {
+          function normalizeMarkdown(hook, vm) {
             var pageDescription = "";
 
             hook.beforeEach(function (content) {
+              pageDescription = "";
+
               var frontmatter = content.match(/^---\s*\n([\s\S]*?)\n---\s*\n*/);
               if (frontmatter) {
                 var description = frontmatter[1].match(/^MetaDescription:\s*(.+)$/m);
@@ -184,6 +187,58 @@
                   var label = type.charAt(0) + type.slice(1).toLowerCase();
                   return prefix + '<span class="alert-title" data-alert-type="' + type.toLowerCase() + '">' + (icons[type] || "") + " " + label + "</span>";
                 },
+              );
+
+              // Docsify resolves relative links from the current Markdown file.
+              // Convert the generated root-relative article links accordingly.
+              var file = vm.route.file || "";
+              var dir = file.substring(0, file.lastIndexOf("/") + 1);
+              var currentParts = dir.split("/").filter(Boolean);
+
+              content = content.replace(
+                /\]\(\/(docs)\/(.*?)\)/g,
+                function (_match, section, rest) {
+                  var hashIdx = rest.indexOf("#");
+                  var filePath = hashIdx >= 0 ? rest.substring(0, hashIdx) : rest;
+                  var anchor = hashIdx >= 0 ? "#" + rest.substring(hashIdx + 1) : "";
+                  filePath = filePath.replace(/\.md$/, "");
+
+                  var targetParts = (section + "/" + filePath).split("/").filter(Boolean);
+                  var common = 0;
+                  while (common < currentParts.length && common < targetParts.length &&
+                         currentParts[common] === targetParts[common]) {
+                    common++;
+                  }
+
+                  var ups = currentParts.length - common;
+                  var relative = "";
+                  for (var i = 0; i < ups; i++) relative += "../";
+                  relative += targetParts.slice(common).join("/");
+                  if (!relative) relative = ".";
+                  return "](" + relative + anchor + ")";
+                },
+              );
+
+              // Resolve relative paths in raw HTML attributes as well. Docsify's
+              // relativePath option only handles Markdown images automatically.
+              content = content.replace(
+                /((?:src|poster|placeholder)=["'])(\.\.\/)+(.*?["'])/g,
+                function (match, prefix, _dots, rest) {
+                  var ups = match.match(/\.\.\//g).length;
+                  var base = dir;
+                  for (var i = 0; i < ups; i++) {
+                    base = base.substring(0, base.slice(0, -1).lastIndexOf("/") + 1);
+                  }
+                  return prefix + base + rest;
+                },
+              );
+              content = content.replace(
+                /((?:src|poster|placeholder)=["'])\.\/((?!http)[^"']*["'])/g,
+                "$1" + dir + "$2",
+              );
+              content = content.replace(
+                /((?:src|poster|placeholder)=["'])(images\/)/g,
+                "$1" + dir + "$2",
               );
 
               return content;
@@ -242,6 +297,19 @@
                   parent = parent.parentElement;
                 }
               }
+
+              var currentPath = (window.location.hash.replace(/^#/, "") || "/").split("?")[0];
+              nav.querySelectorAll("a").forEach(function (link) {
+                var href = (link.getAttribute("href") || "").replace(/^#/, "").split("?")[0];
+                if (href && currentPath.indexOf(href) === 0) {
+                  var folder = link.closest("li.folder");
+                  while (folder) {
+                    folder.classList.add("open");
+                    var parentUl = folder.parentElement;
+                    folder = parentUl ? parentUl.closest("li.folder") : null;
+                  }
+                }
+              });
             }
 
             hook.doneEach(function () {
