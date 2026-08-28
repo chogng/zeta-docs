@@ -1,0 +1,40 @@
+[
+  {
+    "name": "开始使用",
+    "area": "getstarted",
+    "topics": [
+      ["Zeta 概览", "/docs/getstarted/overview"],
+      ["从源码运行", "/docs/getstarted/run-from-source"]
+    ]
+  },
+  {
+    "name": "Agent",
+    "area": "agents",
+    "topics": [
+      ["Agent 概览", "/docs/agents/overview"],
+      ["会话与任务", "/docs/agents/sessions"]
+    ]
+  },
+  {
+    "name": "自定义",
+    "area": "customize",
+    "topics": [
+      ["Skills", "/docs/customize/skills"],
+      ["MCP 服务器", "/docs/customize/mcp-servers"]
+    ]
+  },
+  {
+    "name": "配置",
+    "area": "configure",
+    "topics": [
+      ["权限与批准", "/docs/configure/permissions"]
+    ]
+  },
+  {
+    "name": "参考",
+    "area": "reference",
+    "topics": [
+      ["工具", "/docs/reference/tools"]
+    ]
+  }
+]
