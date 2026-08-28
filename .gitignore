@@ -14,10 +14,12 @@
 /coverage
 .playwright-cli/
 
-# next.js
-/.next/
-/.vinext/
+# generated site output
 /out/
+
+# Docsify generated navigation
+/_navbar.md
+/_sidebar.md
 
 # misc
 .DS_Store
@@ -36,7 +38,6 @@ yarn-error.log*
 .vercel
 
 # typescript
-next-env.d.ts
 /tsconfig.tsbuildinfo
 /dist/
 /.build/

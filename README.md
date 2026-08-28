@@ -1,12 +1,12 @@
 # Zeta Docs
 
-This repository owns the public Zeta documentation and the website that renders it. Product source code and engineering architecture remain in [chogng/zeta](https://github.com/chogng/zeta).
+This repository owns the public Zeta documentation and the lightweight site that previews it. Product source code and engineering architecture remain in [chogng/zeta](https://github.com/chogng/zeta).
 
 ## Repository layout
 
 * `docs/` contains task-oriented Markdown articles and the explicit `toc.json` navigation.
-* `app/`, `components/`, and `lib/` contain the documentation website.
-* `build/` validates content, generates the site data, and tests rendered HTML.
+* `index.html` configures the Docsify browser-side Markdown renderer.
+* `build/` validates content, generates Docsify navigation, and tests the static output.
 * [`CONTRIBUTING.md`](CONTRIBUTING.md) describes the single-maintainer workflow for maintaining and publishing the site.
 
 ## Local development
@@ -18,7 +18,7 @@ corepack pnpm install
 corepack pnpm dev
 ```
 
-Open `http://localhost:3000`. The development command regenerates navigation and search data before starting the site.
+Open `http://localhost:3000`. The development command generates `_sidebar.md` and `_navbar.md` before starting the static site.
 
 ## Maintenance and publishing
 
@@ -41,7 +41,7 @@ Or run the complete suite with:
 corepack pnpm verify
 ```
 
-Every published page must appear in `docs/toc.json` and include `ContentId`, `DateApproved`, and `MetaDescription` frontmatter. The checks reject unlisted pages, duplicate content IDs, broken local links, and missing article structure.
+Every published page must appear in `docs/toc.json` and include `ContentId`, `DateApproved`, and `MetaDescription` frontmatter. The checks reject unlisted pages, duplicate content IDs, broken local links, and missing article structure. Docsify strips the frontmatter in the browser before rendering the article.
 
 ## Content ownership
 

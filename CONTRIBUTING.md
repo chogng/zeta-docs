@@ -4,7 +4,7 @@
 
 This repository is maintained by one developer. `main` is the working branch, so normal documentation changes can be made and committed directly on `main`. Pull requests are not required.
 
-The public documentation source lives in `docs/`. The website implementation lives in `app/`, `components/`, and `lib/`. Product implementation and internal engineering contracts remain in the Zeta source repository.
+The public documentation source lives in `docs/`. The site entry point is `index.html`, and the Docsify navigation generator lives in `build/generateSidebar.ts`. Product implementation and internal engineering contracts remain in the Zeta source repository.
 
 Do not commit generated or local runtime directories such as `.build/`, `dist/`, or `.wrangler/`.
 
@@ -53,7 +53,7 @@ When product behavior changes, update the product source and the corresponding d
    corepack pnpm dev
    ```
 
-   Open `http://localhost:3000` and check the article, navigation, links, search, and responsive layout.
+   Open `http://localhost:3000` and check the article, navigation, links, search, and responsive layout. The preview follows the same lightweight Docsify model used by `../vscode-docs`: the browser requests Markdown files and renders them at runtime.
 
 4. Run the complete verification suite:
 
@@ -83,7 +83,7 @@ Publishing is a separate, manual step. Pushing `main` does not automatically pub
    corepack pnpm build
    ```
 
-   The build regenerates the documentation data and writes the deployable site to `dist/`.
+   The build regenerates the Docsify navigation, copies the Markdown source into the static output, and writes the deployable site to `dist/`.
 
 3. Publish the build to the configured staging environment and verify the rendered pages, navigation, search, links, and metadata.
 

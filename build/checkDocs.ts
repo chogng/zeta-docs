@@ -61,7 +61,7 @@ const pages = walkMarkdown(docsDirectory);
 for (const path of pages) checkPage(path);
 
 try {
-  await import(new URL("./generateDocs.ts", import.meta.url).href);
+  await import(new URL("./generateSidebar.ts", import.meta.url).href);
 } catch (error) {
   failures.push(error instanceof Error ? error.message : String(error));
 }
