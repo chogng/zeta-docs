@@ -1,1 +1,2 @@
 - 参考`../vscode-docs`写
+- 禁止使用docs-site skills

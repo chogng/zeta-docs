@@ -16,6 +16,7 @@
     "build": "vinext build",
     "start": "vinext start",
     "test": "corepack pnpm run build && node --test build/renderedHtml.test.ts",
+    "verify": "corepack pnpm run check:docs && corepack pnpm run lint && corepack pnpm run typecheck && corepack pnpm run test",
     "prelint": "corepack pnpm run generate:docs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "pretypecheck": "corepack pnpm run generate:docs",
