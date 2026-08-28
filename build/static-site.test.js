@@ -1,11 +1,12 @@
-import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
-import test from "node:test";
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
+const test = require("node:test");
 
-const distRoot = new URL("../dist/", import.meta.url);
+const DIST_ROOT = path.resolve(__dirname, "..", "dist");
 
-function readDist(path: string): string {
-  return readFileSync(new URL(path, distRoot), "utf8");
+function readDist(filePath) {
+  return fs.readFileSync(path.join(DIST_ROOT, filePath), "utf8");
 }
 
 test("builds a Docsify entry point and generated navigation", () => {
@@ -19,5 +20,6 @@ test("builds a Docsify entry point and generated navigation", () => {
   assert.match(sidebar, /\*\*开始使用\*\*/);
   assert.match(sidebar, /Zeta 概览/);
   assert.match(navbar, /GitHub/);
-  assert.ok(existsSync(new URL("docs/getstarted/overview.md", distRoot)));
+  assert.ok(fs.existsSync(path.join(DIST_ROOT, "docs", "getstarted", "overview.md")));
+  assert.ok(fs.existsSync(path.join(DIST_ROOT, "favicon.svg")));
 });

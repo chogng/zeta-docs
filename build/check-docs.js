@@ -1,23 +1,24 @@
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
-import { dirname, join, relative, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+// Validates the Zeta documentation structure and local links.
 
-const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const docsDirectory = join(repositoryRoot, "docs");
-const failures: string[] = [];
-const contentIds = new Map<string, string>();
+const fs = require("node:fs");
+const path = require("node:path");
 
-function walkMarkdown(directory: string): string[] {
-  return readdirSync(directory).flatMap((entry) => {
-    const path = join(directory, entry);
-    if (statSync(path).isDirectory()) return walkMarkdown(path);
-    return entry.endsWith(".md") ? [path] : [];
+const ROOT = path.resolve(__dirname, "..");
+const DOCS_DIRECTORY = path.join(ROOT, "docs");
+const failures = [];
+const contentIds = new Map();
+
+function walkMarkdown(directory) {
+  return fs.readdirSync(directory).flatMap((entry) => {
+    const filePath = path.join(directory, entry);
+    if (fs.statSync(filePath).isDirectory()) return walkMarkdown(filePath);
+    return entry.endsWith(".md") ? [filePath] : [];
   });
 }
 
-function checkPage(path: string): void {
-  const sourcePath = relative(repositoryRoot, path).replaceAll("\\", "/");
-  const source = readFileSync(path, "utf8").replace(/\r\n/g, "\n");
+function checkPage(filePath) {
+  const sourcePath = path.relative(ROOT, filePath).replaceAll("\\", "/");
+  const source = fs.readFileSync(filePath, "utf8").replace(/\r\n/g, "\n");
   const frontmatter = /^---\n([\s\S]*?)\n---\n([\s\S]+)$/.exec(source);
   if (!frontmatter) {
     failures.push(`${sourcePath}: missing YAML frontmatter`);
@@ -27,7 +28,9 @@ function checkPage(path: string): void {
   const metadata = frontmatter[1];
   const body = frontmatter[2];
   for (const field of ["ContentId", "DateApproved", "MetaDescription"]) {
-    if (!new RegExp(`^${field}:\\s*\\S.+$`, "m").test(metadata)) failures.push(`${sourcePath}: missing ${field}`);
+    if (!new RegExp(`^${field}:\\s*\\S.+$`, "m").test(metadata)) {
+      failures.push(`${sourcePath}: missing ${field}`);
+    }
   }
 
   const contentId = /^ContentId:\s*(\S+)$/m.exec(metadata)?.[1];
@@ -39,8 +42,11 @@ function checkPage(path: string): void {
 
   const description = /^MetaDescription:\s*(.+)$/m.exec(metadata)?.[1].trim() ?? "";
   if (description.length > 160) failures.push(`${sourcePath}: MetaDescription exceeds 160 characters`);
+
   const dateApproved = /^DateApproved:\s*(.+)$/m.exec(metadata)?.[1].trim() ?? "";
-  if (dateApproved && !/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateApproved)) failures.push(`${sourcePath}: DateApproved must use M/D/YYYY`);
+  if (dateApproved && !/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateApproved)) {
+    failures.push(`${sourcePath}: DateApproved must use M/D/YYYY`);
+  }
 
   const headings = body.match(/^#\s+.+$/gm) ?? [];
   if (headings.length !== 1) failures.push(`${sourcePath}: expected exactly one H1, found ${headings.length}`);
@@ -51,17 +57,17 @@ function checkPage(path: string): void {
     const target = link[1].split("#", 1)[0];
     if (!target || /^[a-z][a-z\d+.-]*:/i.test(target)) continue;
     const localPath = target.startsWith("/docs/")
-      ? join(repositoryRoot, `${target.slice(1).replace(/\.md$/, "")}.md`)
-      : resolve(dirname(path), target);
-    if (!existsSync(localPath)) failures.push(`${sourcePath}: broken local link ${target}`);
+      ? path.join(ROOT, `${target.slice(1).replace(/\.md$/, "")}.md`)
+      : path.resolve(path.dirname(filePath), target);
+    if (!fs.existsSync(localPath)) failures.push(`${sourcePath}: broken local link ${target}`);
   }
 }
 
-const pages = walkMarkdown(docsDirectory);
-for (const path of pages) checkPage(path);
+const pages = walkMarkdown(DOCS_DIRECTORY);
+for (const filePath of pages) checkPage(filePath);
 
 try {
-  await import(new URL("./generateSidebar.ts", import.meta.url).href);
+  require("./generate-sidebar");
 } catch (error) {
   failures.push(error instanceof Error ? error.message : String(error));
 }

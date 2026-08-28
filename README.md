@@ -6,7 +6,7 @@ This repository owns the public Zeta documentation and the lightweight site that
 
 * `docs/` contains task-oriented Markdown articles and the explicit `toc.json` navigation.
 * `index.html` configures the Docsify browser-side Markdown renderer.
-* `build/` validates content, generates Docsify navigation, and tests the static output.
+* `build/` contains the Docsify navigation generator and Zeta-specific validation and publishing helpers.
 * [`CONTRIBUTING.md`](CONTRIBUTING.md) describes the single-maintainer workflow for maintaining and publishing the site.
 
 ## Local development
@@ -14,11 +14,11 @@ This repository owns the public Zeta documentation and the lightweight site that
 Install Node.js 22.13 or later, then run:
 
 ```bash
-corepack pnpm install
-corepack pnpm dev
+npm install
+npm run serve
 ```
 
-Open `http://localhost:3000`. The development command generates `_sidebar.md` and `_navbar.md` before starting the static site.
+Open `http://localhost:3000`. Like `vscode-docs`, the serve command generates the sidebar and then starts Docsify directly from the repository root.
 
 ## Maintenance and publishing
 
@@ -29,16 +29,15 @@ The source workflow and the production publishing workflow are separate. A push 
 ## Validate a change
 
 ```bash
-corepack pnpm check:docs
-corepack pnpm lint
-corepack pnpm typecheck
-corepack pnpm test
+npm run check-docs
+npm run lint
+npm test
 ```
 
 Or run the complete suite with:
 
 ```bash
-corepack pnpm verify
+npm run verify
 ```
 
 Every published page must appear in `docs/toc.json` and include `ContentId`, `DateApproved`, and `MetaDescription` frontmatter. The checks reject unlisted pages, duplicate content IDs, broken local links, and missing article structure. Docsify strips the frontmatter in the browser before rendering the article.

@@ -2,11 +2,21 @@ import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
   {
-    files: ["**/*.mjs"],
+    files: ["build/**/*.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "commonjs",
+      globals: {
+        __dirname: "readonly",
+        console: "readonly",
+        process: "readonly",
+        require: "readonly",
+      },
+    },
     rules: {
       "no-undef": "error",
       "no-unused-vars": "error",
     },
   },
-  globalIgnores(["build/**", "dist/**", ".build/**", "node_modules/**", "**/*.ts"]),
+  globalIgnores(["dist/**", ".build/**", "node_modules/**"]),
 ]);

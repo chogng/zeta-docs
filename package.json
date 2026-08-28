@@ -3,28 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "license": "UNLICENSED",
-  "packageManager": "pnpm@11.17.0",
   "engines": {
     "node": ">=22.13.0"
   },
   "scripts": {
-    "check:docs": "node build/checkDocs.ts",
-    "generate:sidebar": "node build/generateSidebar.ts",
-    "predev": "corepack pnpm run generate:sidebar",
-    "dev": "vite --host 0.0.0.0 --port 3000",
-    "prebuild": "corepack pnpm run generate:sidebar",
-    "build": "vite build",
-    "start": "vite preview --host 0.0.0.0 --port 3000",
-    "test": "corepack pnpm run build && node --test build/staticSite.test.ts",
-    "verify": "corepack pnpm run check:docs && corepack pnpm run lint && corepack pnpm run typecheck && corepack pnpm run test",
-    "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "check-docs": "node ./build/check-docs.js",
+    "lint": "eslint build/*.js",
+    "generate-sidebar": "node ./build/generate-sidebar.js",
+    "serve": "npm run generate-sidebar && docsify serve .",
+    "dev": "npm run serve",
+    "build": "npm run generate-sidebar && node ./build/build-site.js",
+    "test": "npm run build && node --test ./build/static-site.test.js",
+    "verify": "npm run check-docs && npm run lint && npm run test"
   },
   "devDependencies": {
-    "@types/node": "22.19.19",
-    "eslint": "9.39.4",
-    "typescript": "5.9.3",
-    "vite": "8.0.13"
-  },
-  "type": "module"
+    "docsify-cli": "^4.4.4",
+    "eslint": "9.39.4"
+  }
 }
